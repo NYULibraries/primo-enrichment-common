@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Primo Enrichment Common by NYULibraries</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Primo Enrichment Common</h1>
+        <p class="header"></p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/NYULibraries/primo-enrichment-common/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/NYULibraries/primo-enrichment-common/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/NYULibraries/primo-enrichment-common">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/NYULibraries">NYULibraries</a></p>
+
+
+      </header>
+      <section>
+        <h1>Primo Enrichment Common</h1>
+
+<p>Primo Enrichment plugins are hooks into the Primo normalization process that allow PNX records
+to be modified.</p>
+
+<blockquote>
+<p>Just before the PNX records are stored in the database, Primo allows you to enrich the PNX 
+records via the enrichment set assigned to the pipe. 
+These sets include a series of modifications that Primo applies to each PNX record. 
+The modifications may include one or more system-defined enrichments and/or a single enrichment 
+plugin that you may have created using the old EnrichmentPlugin interface. [1]</p>
+</blockquote>
+
+<p>The Primo Enrichment Common classes are shared classes that can be extended for a variety of use cases.</p>
+
+<p>For more information, see the <a href="http://nyulibraries.github.com/primo-enrichment-common/apidocs">API documentation</a></p>
+
+<p>The project leverages <a href="http://maven.apache.org/">Apache Maven</a> for managing dependencies, building, packaging and generating Javadocs.</p>
+
+<p>To install the package locally, run:</p>
+
+<pre><code>$ mvn install
+</code></pre>
+
+<p>Enrichment plugins requires the Primo common-api library. To install the library in your local repository</p>
+
+<pre><code>Download jar from back office server at: $primo_dev/ng/primo/home/system/publish/client/primo_common-api.jar
+$ mvn install:install-file -Dfile=primo_common-api.jar \
+-Dpackaging=jar -DgroupId=com.exlibrisgroup.primo \ 
+-DartifactId=primo_common-api -Dversion=1.0
+</code></pre>
+
+<p>The NYU Libraries uses <a href="https://github.com/capistrano/capistrano">Capistrano</a> as its deploy tool. 
+The deploy mechanism assumes <a href="https://rvm.io/" title="Ruby Version Manager">rvm</a> and 
+<a href="http://www.ruby-lang.org/en/news/2012/02/16/ruby-1-9-3-p125-is-released/">Ruby 1.9.3-p125</a> 
+on the local deploy host but they may not be necessary. 
+In order to deploy: </p>
+
+<pre><code>$ cap -S branch=&lt;branch-name&gt; [staging|production] deploy
+</code></pre>
+
+<p>[1] <a href="http://exlibrisgroup.org/display/PrimoOI/Enrichment+Plug-In+%28new+version%29," title="Enrichment Plug-In (new version)">EL Commons</a></p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+		
+  </body>
+</html>
