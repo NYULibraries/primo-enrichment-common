@@ -3,10 +3,9 @@
  */
 package edu.nyu.library.primo.plugins.enrichment;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
+
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 
 /**
@@ -28,9 +27,9 @@ public class AlephBsnMapper extends SingleTableMapper {
 	 * @throws FileNotFoundException 
 	 */
 	public AlephBsnMapper(String mappingTableName, String mapToColumnName, 
-			String bsnColumnName, File datawarehouseProperties, 
-			List<SectionTag> enrichmentSectionTags) throws FileNotFoundException, IOException {
+			String bsnColumnName, PropertiesConfiguration propertiesConfiguration, 
+			List<SectionTag> enrichmentSectionTags) {
 		super(mappingTableName, mapToColumnName, bsnColumnName, 
-			mapFromSectionTag, datawarehouseProperties, enrichmentSectionTags);
+			mapFromSectionTag, propertiesConfiguration, enrichmentSectionTags);
 	}
 }

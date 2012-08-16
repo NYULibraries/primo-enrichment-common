@@ -16,9 +16,7 @@ import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import edu.nyu.library.primo.plugins.enrichment.AlephBsnMapper;
-import edu.nyu.library.primo.plugins.enrichment.SectionTag;
-
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,7 +47,7 @@ public class AlephBsnMapperTest {
 	private Map<String, Object> enrichmentPluginParams;
 	private IEnrichmentDocUtils enrichmentDocUtils;
 	private Document doc;
-	private File datawarehousePropertiesFile;
+	private PropertiesConfiguration propertiesConfiguration;
 	private String mappingTableName;
 	private String mapToColumnName;
 	private String mapFromColumnName;
@@ -66,7 +64,7 @@ public class AlephBsnMapperTest {
 		enrichmentPluginParams = Maps.newHashMap();
 		doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().
 			parse(new File(nyuAlephXmlFile));
-		datawarehousePropertiesFile = new File(datawarehousePropertiesFilename);
+		propertiesConfiguration = new PropertiesConfiguration(datawarehousePropertiesFilename);
 		mappingTableName = "HARVARD_PROJECT_OCLC_KEYS";
 		mapToColumnName = "OCLC_MASTER";
 		mapFromColumnName = "ALEPH_BSN";
@@ -85,7 +83,7 @@ public class AlephBsnMapperTest {
 	public void testNew() throws Exception {
 		AlephBsnMapper abm = 
 			new AlephBsnMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, datawarehousePropertiesFile, 
+				mapFromColumnName, propertiesConfiguration, 
 					enrichmentSectionTags);
 		assertNotNull(abm);
 	}
@@ -94,7 +92,7 @@ public class AlephBsnMapperTest {
 	public void testInit() throws Exception {
 		AlephBsnMapper abm = 
 			new AlephBsnMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, datawarehousePropertiesFile, 
+				mapFromColumnName, propertiesConfiguration, 
 					enrichmentSectionTags);
 		abm.init(primoLogger, mappingTableFetcher, 
 			enrichmentPluginParams);
@@ -104,7 +102,7 @@ public class AlephBsnMapperTest {
 	public void testGetResultSet() throws Exception {
 		AlephBsnMapper abm = 
 			new AlephBsnMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, datawarehousePropertiesFile, 
+				mapFromColumnName, propertiesConfiguration, 
 					enrichmentSectionTags);
 		ResultSet resultSet = abm.getResultSet("001969478");
 		resultSet.next();
@@ -115,7 +113,7 @@ public class AlephBsnMapperTest {
 	public void testEnrich() throws Exception {
 		AlephBsnMapper abm = 
 			new AlephBsnMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, datawarehousePropertiesFile, 
+				mapFromColumnName, propertiesConfiguration, 
 					enrichmentSectionTags);
 		abm.init(primoLogger, mappingTableFetcher, enrichmentPluginParams);
 		assertNotNull(doc.getElementsByTagName("isbn").item(0));

@@ -9,7 +9,6 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
 	AlephBsnMapperTest.class,
-	ConfigurableSingleTableMapperTest.class,
 	SingleTableMapperTest.class
 	})
 

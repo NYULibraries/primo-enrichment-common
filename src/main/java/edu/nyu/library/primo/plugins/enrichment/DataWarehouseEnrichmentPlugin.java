@@ -3,16 +3,15 @@
  */
 package edu.nyu.library.primo.plugins.enrichment;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
+
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 import com.exlibris.primo.api.common.IMappingTablesFetcher;
 import com.exlibris.primo.api.common.IPrimoLogger;
@@ -41,9 +40,8 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	 * @throws FileNotFoundException 
 	 */
 	@Inject
-	public DataWarehouseEnrichmentPlugin(File datawarehousePropertiesFile) 
-			throws FileNotFoundException, IOException {
-		this(datawarehousePropertiesFile, null);
+	public DataWarehouseEnrichmentPlugin(PropertiesConfiguration propertiesConfiguration) {
+		this(propertiesConfiguration, null);
 	}
 
 	/**
@@ -54,20 +52,16 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	 * @throws FileNotFoundException 
 	 */
 	@Inject
-	public DataWarehouseEnrichmentPlugin(File datawarehousePropertiesFile,
-			List<SectionTag> enrichmentSectionTags) throws FileNotFoundException, IOException {
+	public DataWarehouseEnrichmentPlugin(PropertiesConfiguration propertiesConfiguration,
+			List<SectionTag> enrichmentSectionTags) {
 		super(enrichmentSectionTags);
-		Properties properties = new Properties();
-		this.logInfo("DataWarehouse Properties File: " + datawarehousePropertiesFile);
-		this.logInfo("DataWarehouse Properties File Exists: " + datawarehousePropertiesFile.exists());
-		if (datawarehousePropertiesFile.exists()) {
-			properties.load(new FileReader(datawarehousePropertiesFile));
-		} else {
+		this.logInfo("DataWarehouse Properties: " + propertiesConfiguration.toString());
+		if (propertiesConfiguration.isEmpty()) {
 			for(Entry<String,String> property : System.getenv().entrySet())
-				properties.setProperty(property.getKey(), property.getValue());
+				propertiesConfiguration.setProperty(property.getKey(), property.getValue());
 		}
-		this.dataWarehouse = 
-			Guice.createInjector(new DataWarehouseModule(properties)).
+		dataWarehouse = 
+			Guice.createInjector(new DataWarehouseModule(propertiesConfiguration)).
 				getInstance(DataWarehouse.class);
 	}
 
@@ -89,11 +83,11 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	protected DataWarehouse getDataWarehouse() {
 		return dataWarehouse;
 	}
+
 	/**
 	 * Initializes the NyuEnrichmentPlugin.  Subclasses should override as
 	 * necessary.
 	 */
-
 	@Override
 	public void init(IPrimoLogger primoLogger, 
 			IMappingTablesFetcher tablesFetcher, 

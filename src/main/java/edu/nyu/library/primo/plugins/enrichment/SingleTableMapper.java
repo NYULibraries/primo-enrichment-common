@@ -3,13 +3,13 @@
  */
 package edu.nyu.library.primo.plugins.enrichment;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.w3c.dom.Document;
 
 import com.exlibris.primo.api.plugins.enrichment.IEnrichmentDocUtils;
@@ -22,31 +22,11 @@ import com.google.common.collect.Lists;
  * DataWarehouse.
  */
 public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
-	private final static String datawarehousePropertiesFilename = 
-		"./src/main/resources/META-INF/datawarehouse.properties";
 	private SectionTag mapFromSectionTag;
 	private final String sqlQuery;
 
 	/**
-	 * Public Constructor.
-	 * @param mappingTableName
-	 * @param mappedToColumnName
-	 * @param mappedFromColumnName
-	 * @param mapFromSectionTag
-	 * @param enrichmentSectionTags
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 */
-	public SingleTableMapper(String mappingTableName, String mappedToColumnName, 
-			String mappedFromColumnName, SectionTag mapFromSectionTag, 
-			List<SectionTag> enrichmentSectionTags) throws FileNotFoundException, IOException {
-		this(sqlQuery(mappingTableName, mappedToColumnName, mappedFromColumnName), 
-			mapFromSectionTag, new File(datawarehousePropertiesFilename), 
-				enrichmentSectionTags);
-	}
-
-	/**
-	 * Protected constructor. Used for testing.
+	 * Protected constructor.
 	 * @param mappingTableName
 	 * @param mappedToColumnName
 	 * @param mappedFromColumnName
@@ -58,22 +38,9 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 	 */
 	protected SingleTableMapper(String mappingTableName, String mappedToColumnName, 
 			String mappedFromColumnName, SectionTag mapFromSectionTag, 
-			File datawarehousePropertiesFile, List<SectionTag> enrichmentSectionTags) throws FileNotFoundException, IOException {
+			PropertiesConfiguration propertiesConfiguration, List<SectionTag> enrichmentSectionTags) {
 		this(sqlQuery(mappingTableName, mappedToColumnName, mappedFromColumnName), 
-				mapFromSectionTag, datawarehousePropertiesFile, enrichmentSectionTags);
-	}
-
-	/**
-	 * Public constructor.
-	 * @param sqlQuery
-	 * @param mapFromSectionTag
-	 * @param enrichmentSectionTags
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 */
-	public SingleTableMapper(String sqlQuery, SectionTag mapFromSectionTag, 
-			List<SectionTag> enrichmentSectionTags) throws FileNotFoundException, IOException {
-		this(sqlQuery, mapFromSectionTag, new File(datawarehousePropertiesFilename), enrichmentSectionTags);
+				mapFromSectionTag, propertiesConfiguration, enrichmentSectionTags);
 	}
 
 	/**
@@ -85,8 +52,8 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 	 * @throws FileNotFoundException 
 	 */
 	protected SingleTableMapper(String sqlQuery, SectionTag mapFromSectionTag, 
-			File datawarehousePropertiesFile, List<SectionTag> enrichmentSectionTags) throws FileNotFoundException, IOException {
-		super(datawarehousePropertiesFile, enrichmentSectionTags);
+			PropertiesConfiguration propertiesConfiguration, List<SectionTag> enrichmentSectionTags) {
+		super(propertiesConfiguration, enrichmentSectionTags);
 		this.sqlQuery = sqlQuery;
 		this.mapFromSectionTag = mapFromSectionTag;
 	}
