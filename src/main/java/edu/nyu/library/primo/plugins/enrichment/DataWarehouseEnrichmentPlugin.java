@@ -16,8 +16,10 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import com.exlibris.primo.api.common.IMappingTablesFetcher;
 import com.exlibris.primo.api.common.IPrimoLogger;
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 
 import edu.nyu.library.datawarehouse.DataWarehouse;
 import edu.nyu.library.datawarehouse.DataWarehouseModule;
@@ -56,8 +58,9 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	public DataWarehouseEnrichmentPlugin(PropertiesConfiguration propertiesConfiguration,
 			List<SectionTag> enrichmentSectionTags) {
 		super(enrichmentSectionTags);
-		Iterator<String> iter = propertiesConfiguration.getKeys();
+		this.logInfo("DataWarehouse file: " + propertiesConfiguration.getFileName());
 		this.logInfo("DataWarehouse Properties: ");
+		Iterator<String> iter = propertiesConfiguration.getKeys();
 		while(iter.hasNext()) {
 			String key = iter.next();
 			this.logInfo("\t" + key + ": " + propertiesConfiguration.getProperty(key));
@@ -66,9 +69,25 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 			for(Entry<String,String> property : System.getenv().entrySet())
 				propertiesConfiguration.setProperty(property.getKey(), property.getValue());
 		}
-		dataWarehouse = 
-			Guice.createInjector(new DataWarehouseModule(propertiesConfiguration)).
-				getInstance(DataWarehouse.class);
+		this.logInfo("Before try");
+		try {
+			this.logInfo("Before guice");
+			this.logInfo("DataWarehouse: " + DataWarehouse.class.getCanonicalName());
+			this.logInfo("DataWarehouseModule: " + DataWarehouseModule.class.getCanonicalName());
+			this.logInfo("Guice: " + Guice.class.getCanonicalName());
+			AbstractModule module = new DataWarehouseModule(propertiesConfiguration);
+			this.logInfo("After module");
+			Injector injector = Guice.createInjector(module);
+			this.logInfo("After injector");
+			dataWarehouse = injector.getInstance(DataWarehouse.class);
+			this.logInfo("After dataWarehouse");
+		} catch (Exception e) {
+			this.logInfo("Caught exception");
+			this.logInfo(e.getMessage());
+			for(StackTraceElement trace: e.getStackTrace())
+				this.logInfo(trace.toString());
+		}
+		this.logInfo("After guice");
 	}
 
 	/**
