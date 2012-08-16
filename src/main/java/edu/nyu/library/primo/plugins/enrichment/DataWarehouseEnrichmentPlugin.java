@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,7 +56,12 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	public DataWarehouseEnrichmentPlugin(PropertiesConfiguration propertiesConfiguration,
 			List<SectionTag> enrichmentSectionTags) {
 		super(enrichmentSectionTags);
-		this.logInfo("DataWarehouse Properties: " + propertiesConfiguration.toString());
+		Iterator<String> iter = propertiesConfiguration.getKeys();
+		this.logInfo("DataWarehouse Properties: ");
+		while(iter.hasNext()) {
+			String key = iter.next();
+			this.logInfo("\t" + key + ": " + propertiesConfiguration.getProperty(key));
+		}
 		if (propertiesConfiguration.isEmpty()) {
 			for(Entry<String,String> property : System.getenv().entrySet())
 				propertiesConfiguration.setProperty(property.getKey(), property.getValue());
