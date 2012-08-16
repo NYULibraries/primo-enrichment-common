@@ -58,6 +58,8 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 			List<SectionTag> enrichmentSectionTags) throws FileNotFoundException, IOException {
 		super(enrichmentSectionTags);
 		Properties properties = new Properties();
+		this.logInfo("DataWarehouse Properties File: " + datawarehousePropertiesFile);
+		this.logInfo("DataWarehouse Properties File Exists: " + datawarehousePropertiesFile.exists());
 		if (datawarehousePropertiesFile.exists()) {
 			properties.load(new FileReader(datawarehousePropertiesFile));
 		} else {
