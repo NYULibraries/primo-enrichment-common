@@ -8,13 +8,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.io.File;
+import java.io.FileReader;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,6 +27,7 @@ import com.exlibris.primo.api.plugins.enrichment.IEnrichmentDocUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import edu.nyu.library.datawarehouse.DataWarehouseProperties;
 import edu.nyu.library.primo.plugins.test.util.EnrichmentDocUtils;
 import edu.nyu.library.primo.plugins.test.util.MappingTableFetcher;
 import edu.nyu.library.primo.plugins.test.util.PrimoLogger;
@@ -45,7 +46,7 @@ public class SingleTableMapperTest {
 	private Map<String, Object> enrichmentPluginParams;
 	private IEnrichmentDocUtils enrichmentDocUtils;
 	private Document doc;
-	private PropertiesConfiguration propertiesConfiguration;
+	private DataWarehouseProperties properties;
 	private String mappingTableName;
 	private String mapToColumnName;
 	private String mapFromColumnName;
@@ -63,7 +64,8 @@ public class SingleTableMapperTest {
 		enrichmentPluginParams = Maps.newHashMap();
 		doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().
 			parse(new File(nyuAlephXmlFile));
-		propertiesConfiguration = new PropertiesConfiguration(datawarehousePropertiesFilename); 
+		properties = 
+			new DataWarehouseProperties.Builder(new FileReader(datawarehousePropertiesFilename)).build();
 		mappingTableName = "HARVARD_PROJECT_OCLC_KEYS";
 		mapToColumnName = "OCLC_MASTER";
 		mapFromColumnName = "ALEPH_BSN";
@@ -81,7 +83,7 @@ public class SingleTableMapperTest {
 	public void testNew() throws Exception {
 		SingleTableMapper stm = 
 			new SingleTableMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, mapFromSectionTag, propertiesConfiguration, 
+				mapFromColumnName, mapFromSectionTag, properties, 
 					enrichmentSectionTags);
 		assertNotNull(stm);
 	}
@@ -90,7 +92,7 @@ public class SingleTableMapperTest {
 	public void testInit() throws Exception {
 		SingleTableMapper stm = 
 			new SingleTableMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, mapFromSectionTag, propertiesConfiguration, 
+				mapFromColumnName, mapFromSectionTag, properties, 
 					enrichmentSectionTags);
 		stm.init(primoLogger, mappingTableFetcher, 
 			enrichmentPluginParams);
@@ -100,7 +102,7 @@ public class SingleTableMapperTest {
 	public void testGetResultSet() throws Exception {
 		SingleTableMapper stm = 
 			new SingleTableMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, mapFromSectionTag, propertiesConfiguration, 
+				mapFromColumnName, mapFromSectionTag, properties, 
 					enrichmentSectionTags);
 		ResultSet resultSet = stm.getResultSet("001969478");
 		resultSet.next();
@@ -111,7 +113,7 @@ public class SingleTableMapperTest {
 	public void testEnrich() throws Exception {
 		SingleTableMapper stm = 
 			new SingleTableMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, mapFromSectionTag, propertiesConfiguration, 
+				mapFromColumnName, mapFromSectionTag, properties, 
 					enrichmentSectionTags);
 		stm.init(primoLogger, mappingTableFetcher, enrichmentPluginParams);
 		assertNotNull(doc.getElementsByTagName("isbn").item(0));

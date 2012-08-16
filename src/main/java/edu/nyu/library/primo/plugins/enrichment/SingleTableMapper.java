@@ -3,17 +3,16 @@
  */
 package edu.nyu.library.primo.plugins.enrichment;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.w3c.dom.Document;
 
 import com.exlibris.primo.api.plugins.enrichment.IEnrichmentDocUtils;
 import com.google.common.collect.Lists;
+
+import edu.nyu.library.datawarehouse.DataWarehouseProperties;
 
 /**
  * @author Scot Dalton
@@ -31,29 +30,29 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 	 * @param mappedToColumnName
 	 * @param mappedFromColumnName
 	 * @param mapFromSectionTag
-	 * @param dataWarehouse
+	 * @param properties
 	 * @param enrichmentSectionTags
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
 	protected SingleTableMapper(String mappingTableName, String mappedToColumnName, 
 			String mappedFromColumnName, SectionTag mapFromSectionTag, 
-			PropertiesConfiguration propertiesConfiguration, List<SectionTag> enrichmentSectionTags) {
+			DataWarehouseProperties properties, List<SectionTag> enrichmentSectionTags) {
 		this(sqlQuery(mappingTableName, mappedToColumnName, mappedFromColumnName), 
-				mapFromSectionTag, propertiesConfiguration, enrichmentSectionTags);
+				mapFromSectionTag, properties, enrichmentSectionTags);
 	}
 
 	/**
 	 * Protected constructor. Used for testing.
 	 * @param sqlQuery
-	 * @param dataWarehouse
+	 * @param properties
 	 * @param enrichmentSectionTags
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
 	protected SingleTableMapper(String sqlQuery, SectionTag mapFromSectionTag, 
-			PropertiesConfiguration propertiesConfiguration, List<SectionTag> enrichmentSectionTags) {
-		super(propertiesConfiguration, enrichmentSectionTags);
+			DataWarehouseProperties properties, List<SectionTag> enrichmentSectionTags) {
+		super(properties, enrichmentSectionTags);
 		this.sqlQuery = sqlQuery;
 		this.mapFromSectionTag = mapFromSectionTag;
 	}

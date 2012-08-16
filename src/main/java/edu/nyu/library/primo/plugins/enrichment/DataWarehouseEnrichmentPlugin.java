@@ -3,16 +3,10 @@
  */
 package edu.nyu.library.primo.plugins.enrichment;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.configuration.PropertiesConfiguration;
 
 import com.exlibris.primo.api.common.IMappingTablesFetcher;
 import com.exlibris.primo.api.common.IPrimoLogger;
@@ -23,6 +17,7 @@ import com.google.inject.Injector;
 
 import edu.nyu.library.datawarehouse.DataWarehouse;
 import edu.nyu.library.datawarehouse.DataWarehouseModule;
+import edu.nyu.library.datawarehouse.DataWarehouseProperties;
 
 /**
  * @author Scot Dalton
@@ -43,8 +38,8 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	 * @throws FileNotFoundException 
 	 */
 	@Inject
-	public DataWarehouseEnrichmentPlugin(PropertiesConfiguration propertiesConfiguration) {
-		this(propertiesConfiguration, null);
+	public DataWarehouseEnrichmentPlugin(DataWarehouseProperties properties) {
+		this(properties, null);
 	}
 
 	/**
@@ -55,27 +50,16 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	 * @throws FileNotFoundException 
 	 */
 	@Inject
-	public DataWarehouseEnrichmentPlugin(PropertiesConfiguration propertiesConfiguration,
+	public DataWarehouseEnrichmentPlugin(DataWarehouseProperties properties,
 			List<SectionTag> enrichmentSectionTags) {
 		super(enrichmentSectionTags);
-		this.logInfo("DataWarehouse file: " + propertiesConfiguration.getFileName());
-		this.logInfo("DataWarehouse Properties: ");
-		Iterator<String> iter = propertiesConfiguration.getKeys();
-		while(iter.hasNext()) {
-			String key = iter.next();
-			this.logInfo("\t" + key + ": " + propertiesConfiguration.getProperty(key));
-		}
-		if (propertiesConfiguration.isEmpty()) {
-			for(Entry<String,String> property : System.getenv().entrySet())
-				propertiesConfiguration.setProperty(property.getKey(), property.getValue());
-		}
 		this.logInfo("Before try");
 		try {
 			this.logInfo("Before guice");
 			this.logInfo("DataWarehouse: " + DataWarehouse.class.getCanonicalName());
 			this.logInfo("DataWarehouseModule: " + DataWarehouseModule.class.getCanonicalName());
 			this.logInfo("Guice: " + Guice.class.getCanonicalName());
-			AbstractModule module = new DataWarehouseModule(propertiesConfiguration);
+			AbstractModule module = new DataWarehouseModule(properties);
 			this.logInfo("After module");
 			Injector injector = Guice.createInjector(module);
 			this.logInfo("After injector");
