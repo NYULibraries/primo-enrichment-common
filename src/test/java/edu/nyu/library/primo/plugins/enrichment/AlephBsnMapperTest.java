@@ -39,7 +39,7 @@ import edu.nyu.library.primo.plugins.test.util.PrimoLogger;
  *
  */
 public class AlephBsnMapperTest {
-	private final static String datawarehousePropertiesFilename = 
+	private final static String propertiesFilename = 
 		"./src/test/resources/META-INF/datawarehouse.properties";
 	private final static String nyuAlephXmlFile = 
 		"./src/test/resources/META-INF/nyu_aleph.xml";
@@ -65,14 +65,16 @@ public class AlephBsnMapperTest {
 		enrichmentPluginParams = Maps.newHashMap();
 		doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().
 			parse(new File(nyuAlephXmlFile));
-		properties = 
-			new DataWarehouseProperties.Builder(new FileReader(datawarehousePropertiesFilename)).build();
+		File propertiesFile = new File(propertiesFilename);
+		properties = new DataWarehouseProperties.Builder().build();
+		if(propertiesFile.exists())
+			properties = new DataWarehouseProperties.Builder(new FileReader(propertiesFile)).build();
 		mappingTableName = "HARVARD_PROJECT_OCLC_KEYS";
 		mapToColumnName = "OCLC_MASTER";
 		mapFromColumnName = "ALEPH_BSN";
 		enrichmentSectionTags = Lists.newArrayList(
 			new SectionTag("addata", "oclcid"), 
-			new SectionTag("search", "oclc"));
+			new SectionTag("search", "general"));
 	}
 
 	/**
