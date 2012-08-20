@@ -53,25 +53,9 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	public DataWarehouseEnrichmentPlugin(DataWarehouseProperties properties,
 			List<SectionTag> enrichmentSectionTags) {
 		super(enrichmentSectionTags);
-		this.logInfo("Before try");
-		try {
-			this.logInfo("Before guice");
-			this.logInfo("DataWarehouse: " + DataWarehouse.class.getCanonicalName());
-			this.logInfo("DataWarehouseModule: " + DataWarehouseModule.class.getCanonicalName());
-			this.logInfo("Guice: " + Guice.class.getCanonicalName());
-			AbstractModule module = new DataWarehouseModule(properties);
-			this.logInfo("After module");
-			Injector injector = Guice.createInjector(module);
-			this.logInfo("After injector");
-			dataWarehouse = injector.getInstance(DataWarehouse.class);
-			this.logInfo("After dataWarehouse");
-		} catch (Exception e) {
-			this.logInfo("Caught exception");
-			this.logInfo(e.getMessage());
-			for(StackTraceElement trace: e.getStackTrace())
-				this.logInfo(trace.toString());
-		}
-		this.logInfo("After guice");
+		AbstractModule module = new DataWarehouseModule(properties);
+		Injector injector = Guice.createInjector(module);
+		dataWarehouse = injector.getInstance(DataWarehouse.class);
 	}
 
 	/**
@@ -102,6 +86,5 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 			IMappingTablesFetcher tablesFetcher, 
 			Map<String, Object> paramsMap) throws Exception {
 		super.init(primoLogger, tablesFetcher, paramsMap);
-		
 	}
 }

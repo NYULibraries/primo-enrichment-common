@@ -66,13 +66,18 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 	@Override
 	public Document enrich(Document doc, IEnrichmentDocUtils docUtils) 
 			throws Exception {
+		logInfo("Enrich: " + doc.toString());
+		logInfo("Section: " + mapFromSectionTag.section);
+		logInfo("Tag: " + mapFromSectionTag.tag);
 		String[] mapFromTags = docUtils.
 			getValuesBySectionAndTag(doc, mapFromSectionTag.section, mapFromSectionTag.tag);
 		List<String> mappings = Lists.newArrayList();
 		for (String mapFromTag: mapFromTags) {
 			ResultSet resultSet = 
 				getResultSet(mapFromTag);
+			logInfo("ResultSet: " + resultSet.toString());
 			while(resultSet.next()) {
+				logInfo("ResultSet next: " + resultSet.getString(1));
 				mappings.add(resultSet.getString(1));
 			}
 		}
