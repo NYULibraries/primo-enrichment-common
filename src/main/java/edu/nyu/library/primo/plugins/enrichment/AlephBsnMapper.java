@@ -3,6 +3,8 @@
  */
 package edu.nyu.library.primo.plugins.enrichment;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import edu.nyu.library.datawarehouse.DataWarehouseProperties;
@@ -18,18 +20,18 @@ public class AlephBsnMapper extends SingleTableMapper {
 
 	/**
 	 * 
-	 * @param mappingTableName
-	 * @param mapToColumnName
+	 * @param table
+	 * @param selections
 	 * @param bsnColumnName
 	 * @param dataWarehouse
 	 * @param enrichmentSectionTags
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	public AlephBsnMapper(String mappingTableName, String mapToColumnName, 
+	public AlephBsnMapper(String table, List<String> selections, 
 			String bsnColumnName, DataWarehouseProperties properties, 
 			List<SectionTag> enrichmentSectionTags) {
-		super(mappingTableName, mapToColumnName, bsnColumnName, 
+		super(table, selections, bsnColumnName, 
 			mapFromSectionTag, properties, enrichmentSectionTags);
 	}
 }

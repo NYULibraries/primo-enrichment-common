@@ -47,9 +47,9 @@ public class SingleTableMapperTest {
 	private IEnrichmentDocUtils enrichmentDocUtils;
 	private Document doc;
 	private DataWarehouseProperties properties;
-	private String mappingTableName;
-	private String mapToColumnName;
-	private String mapFromColumnName;
+	private String table;
+	private List<String> selections;
+	private String whereColumn;
 	private SectionTag mapFromSectionTag;
 	private List<SectionTag> enrichmentSectionTags;
 	
@@ -68,9 +68,9 @@ public class SingleTableMapperTest {
 		properties = new DataWarehouseProperties.Builder().build();
 		if(propertiesFile.exists())
 			properties = new DataWarehouseProperties.Builder(new FileReader(propertiesFile)).build();
-		mappingTableName = "HARVARD_PROJECT_OCLC_KEYS";
-		mapToColumnName = "OCLC_MASTER";
-		mapFromColumnName = "ALEPH_BSN";
+		table = "HARVARD_PROJECT_OCLC_KEYS";
+		selections = Lists.newArrayList("OCLC_MASTER");
+		whereColumn = "ALEPH_BSN";
 		mapFromSectionTag = new SectionTag("control", "sourcerecordid");
 		enrichmentSectionTags = Lists.newArrayList(
 			new SectionTag("addata", "oclcid"), 
@@ -84,8 +84,8 @@ public class SingleTableMapperTest {
 	@Test
 	public void testNew() throws Exception {
 		SingleTableMapper stm = 
-			new SingleTableMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, mapFromSectionTag, properties, 
+			new SingleTableMapper(table, selections, 
+				whereColumn, mapFromSectionTag, properties, 
 					enrichmentSectionTags);
 		assertNotNull(stm);
 	}
@@ -93,8 +93,8 @@ public class SingleTableMapperTest {
 	@Test
 	public void testInit() throws Exception {
 		SingleTableMapper stm = 
-			new SingleTableMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, mapFromSectionTag, properties, 
+			new SingleTableMapper(table, selections, 
+				whereColumn, mapFromSectionTag, properties, 
 					enrichmentSectionTags);
 		stm.init(primoLogger, mappingTableFetcher, 
 			enrichmentPluginParams);
@@ -103,8 +103,8 @@ public class SingleTableMapperTest {
 	@Test
 	public void testGetResultSet() throws Exception {
 		SingleTableMapper stm = 
-			new SingleTableMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, mapFromSectionTag, properties, 
+			new SingleTableMapper(table, selections, 
+				whereColumn, mapFromSectionTag, properties, 
 					enrichmentSectionTags);
 		ResultSet resultSet = stm.getResultSet("001969478");
 		resultSet.next();
@@ -114,8 +114,8 @@ public class SingleTableMapperTest {
 	@Test
 	public void testEnrich() throws Exception {
 		SingleTableMapper stm = 
-			new SingleTableMapper(mappingTableName, mapToColumnName, 
-				mapFromColumnName, mapFromSectionTag, properties, 
+			new SingleTableMapper(table, selections, 
+				whereColumn, mapFromSectionTag, properties, 
 					enrichmentSectionTags);
 		stm.init(primoLogger, mappingTableFetcher, enrichmentPluginParams);
 		assertNotNull(doc.getElementsByTagName("isbn").item(0));

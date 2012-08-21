@@ -80,13 +80,20 @@ public abstract class NyuEnrichmentPlugin extends NyuPlugin implements Enrichmen
 	 * @return
 	 */
 	protected Document addEnrichmentTags(Document doc, 
-			IEnrichmentDocUtils docUtil, List<String> values) {
-		for(SectionTag sectionTag: enrichmentSectionTags)
+			IEnrichmentDocUtils docUtil, Map<SectionTag, List<String>> values) {
+		for(SectionTag sectionTag: getEnrichmentSectionTags())
 			docUtil.addTags(doc, sectionTag.section, sectionTag.tag, 
-				values.toArray(new String[0]));
+				values.get(sectionTag).toArray(new String[0]));
 		return doc;
 	}
 	
+	/**
+	 * @return the enrichmentSectionTags
+	 */
+	public List<SectionTag> getEnrichmentSectionTags() {
+		return enrichmentSectionTags;
+	}
+
 	/**
 	 * Returns an IMappingTablesFetcher.
 	 * Returns the IMappingTablesFetcher initialized with this NyuEnrichmentPlugin.

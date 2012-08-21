@@ -3,14 +3,19 @@
  */
 package edu.nyu.library.primo.plugins.enrichment;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 
 import com.exlibris.primo.api.plugins.enrichment.IEnrichmentDocUtils;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import edu.nyu.library.datawarehouse.DataWarehouseProperties;
 
@@ -26,19 +31,19 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 
 	/**
 	 * Protected constructor.
-	 * @param mappingTableName
-	 * @param mappedToColumnName
-	 * @param mappedFromColumnName
+	 * @param table
+	 * @param selections
+	 * @param whereColumn
 	 * @param mapFromSectionTag
 	 * @param properties
 	 * @param enrichmentSectionTags
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
-	protected SingleTableMapper(String mappingTableName, String mappedToColumnName, 
-			String mappedFromColumnName, SectionTag mapFromSectionTag, 
+	protected SingleTableMapper(String table, List<String> selections, 
+			String whereColumn, SectionTag mapFromSectionTag, 
 			DataWarehouseProperties properties, List<SectionTag> enrichmentSectionTags) {
-		this(sqlQuery(mappingTableName, mappedToColumnName, mappedFromColumnName), 
+		this(sqlQuery(table, selections, whereColumn), 
 				mapFromSectionTag, properties, enrichmentSectionTags);
 	}
 
@@ -66,15 +71,16 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 	@Override
 	public Document enrich(Document doc, IEnrichmentDocUtils docUtils) 
 			throws Exception {
-		String[] mapFromTags = docUtils.
-			getValuesBySectionAndTag(doc, mapFromSectionTag.section, mapFromSectionTag.tag);
-		List<String> mappings = Lists.newArrayList();
-		for (String mapFromTag: mapFromTags) {
-			ResultSet resultSet = 
-				getResultSet(mapFromTag);
+		String[] mappingValues = getMappingValues(doc, docUtils);
+		List<String> values = Lists.newArrayList();
+		for (String mappingValue: mappingValues) {
+			ResultSet resultSet = getResultSet(mappingValue);
 			while(resultSet.next())
-				mappings.add(resultSet.getString(1));
+				values.add(resultSet.getString(1));
 		}
+		Map<SectionTag, List<String>> mappings = Maps.newHashMap();
+		for(SectionTag sectionTag: getEnrichmentSectionTags())
+			mappings.put(sectionTag, values);
 		return addEnrichmentTags(doc, docUtils, mappings);
 	}
 	
@@ -86,18 +92,26 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 		return super.getResultSet(sqlQuery + bsn);
 	}
 
-	private final static String sqlQuery(String mappingTableName, 
-			String mappedToColumnName,  String mappedFromColumnName) {
-		if (	mappingTableName == null) 
+	private final static String sqlQuery(String table, 
+			List<String> selections,  String whereColumn) {
+		if (	table == null) 
 			throw new NullPointerException(
 				"No property mapping table defined.");
-		if (	mappedToColumnName == null) 
+		if (selections == null) 
 			throw new NullPointerException(
-				"No property mapped to column defined.");
-		if (	mappedFromColumnName == null) 
+				"No select columns defined.");
+		if (selections.isEmpty()) 
+			throw new IllegalArgumentException(
+				"Select columns are empty.");
+		if (	whereColumn == null) 
 			throw new NullPointerException(
-				"No property mapped from column defined.");
-		return "SELECT " + mappedToColumnName + " FROM " + mappingTableName + 
-			" WHERE " + mappedFromColumnName + " = ";
+				"No 'WHERE' column defined.");
+		return "SELECT " + Joiner.on(", ").join(selections) + " FROM " + table + 
+			" WHERE " + whereColumn + " = ";
+	}
+	
+	protected String[] getMappingValues(Document doc, IEnrichmentDocUtils docUtils) {
+		return docUtils.getValuesBySectionAndTag(doc, 
+			mapFromSectionTag.section, mapFromSectionTag.tag);
 	}
 }
