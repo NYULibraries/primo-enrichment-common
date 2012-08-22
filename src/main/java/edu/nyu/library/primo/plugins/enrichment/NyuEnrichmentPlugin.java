@@ -82,8 +82,9 @@ public abstract class NyuEnrichmentPlugin extends NyuPlugin implements Enrichmen
 	protected Document addEnrichmentTags(Document doc, 
 			IEnrichmentDocUtils docUtil, Map<SectionTag, List<String>> values) {
 		for(SectionTag sectionTag: getEnrichmentSectionTags())
-			docUtil.addTags(doc, sectionTag.section, sectionTag.tag, 
-				values.get(sectionTag).toArray(new String[0]));
+			if (!values.isEmpty())
+				docUtil.addTags(doc, sectionTag.section, sectionTag.tag, 
+					values.get(sectionTag).toArray(new String[0]));
 		return doc;
 	}
 	
