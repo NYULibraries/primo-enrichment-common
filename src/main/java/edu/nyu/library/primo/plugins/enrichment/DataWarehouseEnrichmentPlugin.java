@@ -78,7 +78,7 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	}
 
 	/**
-	 * Initializes the NyuEnrichmentPlugin.  Subclasses should override as
+	 * Initializes the DataWarehouseEnrichmentPlugin.  Subclasses should override as
 	 * necessary.
 	 */
 	@Override
