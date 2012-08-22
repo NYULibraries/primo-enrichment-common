@@ -20,10 +20,11 @@ import com.google.common.collect.Maps;
 import edu.nyu.library.datawarehouse.DataWarehouseProperties;
 
 /**
- * @author Scot Dalton
  * SingleTableMapper represents a column to column enrichment based on
  * a give element in the Primo document and a mapped column in the 
  * DataWarehouse.
+ * 
+ * @author Scot Dalton
  */
 public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 	private SectionTag mapFromSectionTag;

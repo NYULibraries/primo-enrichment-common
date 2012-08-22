@@ -20,13 +20,14 @@ import edu.nyu.library.datawarehouse.DataWarehouseModule;
 import edu.nyu.library.datawarehouse.DataWarehouseProperties;
 
 /**
- * @author Scot Dalton
- * 
  * Abstract class for enriching Primo via the NYU Libraries Data Warehouse.
  * Subclasses should implement the abstract method getSqlStatement() with 
  * their specific query for simple queries or throw an 
  * UnsupportedOperationException and use the method 
  * getResultSet(String sql) for more complex needs
+ * 
+ * @author Scot Dalton
+ * 
  */
 public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin {
 	private DataWarehouse dataWarehouse;

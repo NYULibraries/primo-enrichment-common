@@ -15,12 +15,13 @@ import com.exlibris.primo.api.common.IMappingTablesFetcher;
 import com.exlibris.primo.api.common.IPrimoLogger;
 
 /**
- * @author Scot Dalton
- * 
  * Abstract class for enriching Primo via an HTTP Response.
  * Subclasses should implement enrich based on the Content response from
  * getResponse() or postResponse() with their specific logic for 
  * processing responses.
+ * 
+ * @author Scot Dalton
+ * 
  */
 public abstract class HttpEnrichmentPlugin extends NyuEnrichmentPlugin {
 	

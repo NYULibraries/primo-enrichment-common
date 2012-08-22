@@ -18,12 +18,12 @@ import com.exlibris.primo.api.plugins.enrichment.IEnrichmentDocUtils;
 import edu.nyu.library.primo.plugins.NyuPlugin;
 
 /**
- * @author Scot Dalton
- * 
  * Base class for enrichment plugins.  Extends NyuPlugin
  * and implements the enrichment plugin interface provided 
  * by ExLibris.
  *
+ * @author Scot Dalton
+ * 
  */
 public abstract class NyuEnrichmentPlugin extends NyuPlugin implements EnrichmentPlugin {
 	private IMappingTablesFetcher tablesFetcher;
