@@ -72,16 +72,28 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 	@Override
 	public Document enrich(Document doc, IEnrichmentDocUtils docUtils) 
 			throws Exception {
+		String key = "getting 'where' conditional value from PNX";
+		startStopWatch(key);
 		String[] mappingValues = getMappingValues(doc, docUtils);
+		stopStopWatch(key);
 		List<String> values = Lists.newArrayList();
 		for (String mappingValue: mappingValues) {
+			key = "getting result set from datawarehouse for value " + mappingValue;
+			startStopWatch(key);
 			ResultSet resultSet = getResultSet(mappingValue);
+			stopStopWatch(key);
+			key = "adding results from datawarehouse to values list";
+			startStopWatch(key);
 			while(resultSet.next())
 				values.add(resultSet.getString(1));
+			stopStopWatch(key);
 		}
+		key = "adding values list to SectionTag map";
+		startStopWatch(key);
 		Map<SectionTag, List<String>> mappings = Maps.newHashMap();
 		for(SectionTag sectionTag: getEnrichmentSectionTags())
 			mappings.put(sectionTag, values);
+		stopStopWatch(key);
 		return addEnrichmentTags(doc, docUtils, mappings);
 	}
 	
