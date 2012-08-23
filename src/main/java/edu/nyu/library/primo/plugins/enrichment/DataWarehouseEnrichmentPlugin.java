@@ -68,6 +68,10 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	protected ResultSet getResultSet(String sql) throws SQLException {
 		return dataWarehouse.executeQuery(sql);
 	}
+	
+	protected void closeConnection() {
+		dataWarehouse.close();
+	}
 
 	/**
 	 * Returns the instance of DataWarehouse associated with the 

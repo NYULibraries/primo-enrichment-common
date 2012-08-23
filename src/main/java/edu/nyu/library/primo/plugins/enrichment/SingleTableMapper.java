@@ -87,6 +87,7 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 			while(resultSet.next())
 				values.add(resultSet.getString(1));
 			stopStopWatch(key);
+			closeConnection();
 		}
 		key = "adding values list to SectionTag map";
 		startStopWatch(key);
