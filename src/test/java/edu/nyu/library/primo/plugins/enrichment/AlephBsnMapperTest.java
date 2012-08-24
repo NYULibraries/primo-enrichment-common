@@ -11,11 +11,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -110,14 +108,11 @@ public class AlephBsnMapperTest {
 			new AlephBsnMapper(table, selections, 
 				whereColumn, properties, 
 					enrichmentSectionTags);
-		Entry<Connection, ResultSet> resultsEntry = 
-			abm.getResultSet("001969478");
-		Connection connection = resultsEntry.getKey();
-		ResultSet resultSet = resultsEntry.getValue();
+		ResultSet resultSet = abm.getResultSet("001969478");
 		resultSet.next();
 		assertEquals("22983279", resultSet.getString(1));
 		resultSet.close();
-		connection.close();
+		resultSet.getStatement().getConnection().close();
 	}
 	
 	@Test

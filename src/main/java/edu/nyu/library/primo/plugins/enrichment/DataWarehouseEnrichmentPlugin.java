@@ -5,12 +5,10 @@ package edu.nyu.library.primo.plugins.enrichment;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.exlibris.primo.api.common.IMappingTablesFetcher;
 import com.exlibris.primo.api.common.IPrimoLogger;
@@ -69,7 +67,7 @@ public abstract class DataWarehouseEnrichmentPlugin extends NyuEnrichmentPlugin 
 	 * @return
 	 * @throws SQLException
 	 */
-	protected Entry<Connection, ResultSet> getResultSet(String sql) throws SQLException {
+	protected ResultSet getResultSet(String sql) throws SQLException {
 		return dataWarehouse.executeQuery(sql);
 	}
 	

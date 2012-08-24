@@ -9,11 +9,9 @@ import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.io.FileReader;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -108,14 +106,11 @@ public class SingleTableMapperTest {
 			new SingleTableMapper(table, selections, 
 				whereColumn, mapFromSectionTag, properties, 
 					enrichmentSectionTags);
-		Entry<Connection, ResultSet> resultsEntry = 
-			stm.getResultSet("001969478");
-		Connection connection = resultsEntry.getKey();
-		ResultSet resultSet = resultsEntry.getValue();
+		ResultSet resultSet = stm.getResultSet("001969478");
 		resultSet.next();
 		assertEquals("22983279", resultSet.getString(1));
 		resultSet.close();
-		connection.close();
+		resultSet.getStatement().getConnection().close();
 	}
 	
 	@Test

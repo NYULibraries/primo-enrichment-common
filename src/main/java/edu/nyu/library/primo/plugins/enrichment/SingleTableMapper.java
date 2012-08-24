@@ -5,12 +5,10 @@ package edu.nyu.library.primo.plugins.enrichment;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.w3c.dom.Document;
 
@@ -82,10 +80,7 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 		for (String mappingValue: mappingValues) {
 			key = "getting result set from datawarehouse for value " + mappingValue;
 			startStopWatch(key);
-			Entry<Connection, ResultSet> resultsEntry = 
-				getResultSet(mappingValue);
-			Connection connection = resultsEntry.getKey();
-			ResultSet resultSet = resultsEntry.getValue();
+			ResultSet resultSet = getResultSet(mappingValue);
 			stopStopWatch(key);
 			key = "adding results from datawarehouse to values list";
 			startStopWatch(key);
@@ -93,7 +88,7 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 				values.add(resultSet.getString(1));
 			stopStopWatch(key);
 			resultSet.close();
-			connection.close();
+			resultSet.getStatement().getConnection().close();
 		}
 		key = "adding values list to SectionTag map";
 		startStopWatch(key);
@@ -108,7 +103,7 @@ public class SingleTableMapper extends DataWarehouseEnrichmentPlugin {
 	 * Get Result set based on the initial SQL query and the given BSN.
 	 */
 	@Override
-	public Entry<Connection, ResultSet> getResultSet(String bsn) throws SQLException {
+	public ResultSet getResultSet(String bsn) throws SQLException {
 		return super.getResultSet(sqlQuery + bsn);
 	}
 
